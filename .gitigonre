@@ -1,0 +1,6 @@
+backend/target/
+backend/.idea/
+backend/*.iml
+backend/.mvn/
+backend/src/main/resources/application.properties
+frontend/.DS_Store

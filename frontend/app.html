@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kynto Clone - Job Description Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Job Description Generator</h1>
+        <textarea id="ideaInput" placeholder="Rough job idea likho, jaise: Backend developer with Java experience"></textarea>
+        <button onclick="generateJobDescription()">Generate</button>
+        <div id="result"></div>
+        <button id="saveBtn" onclick="saveJobDescription()" style="display:none;">Save to Database</button>
+    <div id="saveStatus"></div>
+     <hr>
+
+    <h2>Saved Job Descriptions</h2>
+    <button onclick="loadAllJobs()">Refresh List</button>
+    <div id="jobList"></div>
+
+    <hr>
+<h2>Score Candidates</h2>
+<select id="jobSelect"></select>
+<button onclick="scoreAllCandidates()">Score All Candidates for This Job</button>
+<div id="scoreResults"></div>
+
+<hr>
+<h2>Interview Preparation</h2>
+<select id="candidateSelect"></select>
+<button onclick="generateInterviewPrep()">Generate Interview Prep</button>
+<div id="prepResult"></div>
+
+<hr>
+<h2>Shortlisted Candidates (Outreach)</h2>
+<select id="outreachJobSelect"></select>
+<input type="number" id="thresholdInput" value="70" min="0" max="100" style="width:80px;" placeholder="Min score">
+<button onclick="loadShortlisted()">Load Shortlisted Candidates</button>
+<div id="shortlistResults"></div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

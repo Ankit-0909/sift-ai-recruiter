@@ -1,5 +1,9 @@
 # Sift — AI Recruiting Assistant
 
+**Live Demo:** [ankit-0909.github.io/sift-ai-recruiter](https://ankit-0909.github.io/sift-ai-recruiter/) · **Screenshots:** [demo.html](https://ankit-0909.github.io/sift-ai-recruiter/demo.html) · **Backend API:** [sift-ai-recruiter.onrender.com](https://sift-ai-recruiter.onrender.com)
+
+> Note: The backend runs on a free-tier instance and may take 30–60 seconds to wake up on first request after inactivity.
+
 A scaled-down AI recruiting pipeline built to explore how retrieval-augmented generation (RAG) makes AI hiring tools explainable instead of a black box.
 
 Sift generates job descriptions, filters candidates with semantic retrieval before scoring them, drafts per-candidate interview prep, and can send AI-drafted outreach emails to shortlisted candidates — all with a human approving the final send.

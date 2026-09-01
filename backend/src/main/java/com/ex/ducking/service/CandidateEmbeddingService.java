@@ -1,26 +1,25 @@
 package com.ex.ducking.service;
 
-
 import com.ex.ducking.model.Candidate;
 import com.ex.ducking.repository.CandidateRepository;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CandidateEmbeddingService {
 
-    @Autowired
+    @Autowired(required = false)
     private EmbeddingModel embeddingModel;
 
     @Autowired
@@ -29,8 +28,11 @@ public class CandidateEmbeddingService {
     @Autowired
     private CandidateRepository candidateRepository;
 
-
     public String embedAllCandidates() {
+        if (embeddingModel == null) {
+            return "Embedding model not available in this environment (production mode) — RAG filtering disabled, scoring will use all candidates.";
+        }
+
         List<Candidate> candidates = candidateRepository.findAll();
         embeddingStore.removeAll();
 
@@ -47,8 +49,11 @@ public class CandidateEmbeddingService {
         return "Embedded " + candidates.size() + " candidates.";
     }
 
-
     public List<Long> findTopMatchingCandidateIds(String jobDescriptionText, int topN, double minScore) {
+        if (embeddingModel == null) {
+            return Collections.emptyList(); // fallback trigger karega scoring mein
+        }
+
         Embedding queryEmbedding = embeddingModel.embed(jobDescriptionText).content();
 
         EmbeddingSearchRequest request = EmbeddingSearchRequest.builder()
@@ -63,7 +68,12 @@ public class CandidateEmbeddingService {
                 .map(match -> Long.valueOf(match.embedded().metadata().getString("candidateId")))
                 .collect(Collectors.toList());
     }
+
     public List<String> findMatchesWithScores(String jobDescriptionText) {
+        if (embeddingModel == null) {
+            return Collections.singletonList("Embedding model not available in this environment.");
+        }
+
         Embedding queryEmbedding = embeddingModel.embed(jobDescriptionText).content();
 
         EmbeddingSearchRequest request = EmbeddingSearchRequest.builder()

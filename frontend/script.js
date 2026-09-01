@@ -1,5 +1,6 @@
-let currentGeneratedText = ""; 
-let currentKeySkills = ""; 
+let currentGeneratedText = "";
+let currentKeySkills = "";
+const API_BASE = "https://sift-ai-recruiter.onrender.com";
 
 
 async function generateJobDescription() {
@@ -14,7 +15,7 @@ async function generateJobDescription() {
     resultDiv.innerText = "Generating...";
 
     try {
-        const response = await fetch('http://localhost:8080/api/generate/job-description', {
+        const response = await fetch(`${API_BASE}/api/generate/job-description`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ idea: idea })
@@ -22,7 +23,7 @@ async function generateJobDescription() {
 
         const data = await response.json();
         currentGeneratedText = data.description;
-        currentKeySkills = data.keySkills; 
+        currentKeySkills = data.keySkills;
         resultDiv.innerText = currentGeneratedText;
 
         document.getElementById('saveBtn').style.display = 'inline-block';
@@ -36,14 +37,14 @@ async function saveJobDescription() {
     const statusDiv = document.getElementById('saveStatus');
 
     try {
-        const response = await fetch('http://localhost:8080/api/job-descriptions', {
+        const response = await fetch(`${API_BASE}/api/job-descriptions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 title: idea,
                 description: currentGeneratedText,
                 requirements: "",
-                keySkills: currentKeySkills 
+                keySkills: currentKeySkills
             })
         });
 
@@ -51,6 +52,7 @@ async function saveJobDescription() {
             statusDiv.innerText = "Saved successfully!";
             loadAllJobs();
             loadJobsForScoring()
+            loadOutreachJobs();
         } else {
             statusDiv.innerText = "Save failed.";
         }
@@ -58,12 +60,13 @@ async function saveJobDescription() {
         statusDiv.innerText = "Error: " + error.message;
     }
 }
+
 async function loadAllJobs() {
     const jobListDiv = document.getElementById('jobList');
     jobListDiv.innerHTML = "Loading...";
 
     try {
-        const response = await fetch('http://localhost:8080/api/job-descriptions');
+        const response = await fetch(`${API_BASE}/api/job-descriptions`);
         const jobs = await response.json();
 
         if (jobs.length === 0) {
@@ -86,12 +89,12 @@ async function loadAllJobs() {
 
 async function deleteJob(id) {
     try {
-        const response = await fetch(`http://localhost:8080/api/job-descriptions/${id}`, {
+        const response = await fetch(`${API_BASE}/api/job-descriptions/${id}`, {
             method: 'DELETE'
         });
 
         if (response.ok) {
-            loadAllJobs(); 
+            loadAllJobs();
         } else {
             alert("Delete failed");
         }
@@ -100,13 +103,8 @@ async function deleteJob(id) {
     }
 }
 
-
-window.onload = function() {
-    loadAllJobs();
-};
-
 async function loadJobsForScoring() {
-    const response = await fetch('http://localhost:8080/api/job-descriptions');
+    const response = await fetch(`${API_BASE}/api/job-descriptions`);
     const jobs = await response.json();
     const select = document.getElementById('jobSelect');
     select.innerHTML = jobs.map(job => `<option value="${job.id}">${job.title}</option>`).join('');
@@ -118,13 +116,13 @@ async function scoreAllCandidates() {
     resultsDiv.innerHTML = "Scoring in progress... this process may take a few moments";
 
     try {
-        const response = await fetch(`http://localhost:8080/api/scoring/score-all/${jobId}`, { method: 'POST' });
+        const response = await fetch(`${API_BASE}/api/scoring/score-all/${jobId}`, { method: 'POST' });
         const data = await response.json();
 
-        
+
         const ragNote = `
             <p class="rag-note">
-                Showing ${data.candidatesScored} semantically relevant candidates 
+                Showing ${data.candidatesScored} semantically relevant candidates
                 (out of ${data.totalCandidatesInPool} total) — filtered using RAG retrieval.
             </p>
         `;
@@ -138,11 +136,11 @@ async function scoreAllCandidates() {
 
 
 async function loadRankedScores(jobId) {
-    const response = await fetch(`http://localhost:8080/api/scoring/job/${jobId}`);
+    const response = await fetch(`${API_BASE}/api/scoring/job/${jobId}`);
     const scores = await response.json();
     const resultsDiv = document.getElementById('scoreResults');
 
-    
+
     const existingNote = resultsDiv.querySelector('.rag-note');
     const noteHTML = existingNote ? existingNote.outerHTML : '';
 
@@ -154,15 +152,8 @@ async function loadRankedScores(jobId) {
     `).join('');
 }
 
-
-window.onload = function() {
-    loadAllJobs();
-    loadJobsForScoring();
-};
-
-
 async function loadCandidatesForPrep() {
-    const response = await fetch('http://localhost:8080/api/candidates');
+    const response = await fetch(`${API_BASE}/api/candidates`);
     const candidates = await response.json();
     const select = document.getElementById('candidateSelect');
     select.innerHTML = candidates.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
@@ -175,7 +166,7 @@ async function generateInterviewPrep() {
     resultDiv.innerHTML = "Generating prep... please wait";
 
     try {
-        const response = await fetch(`http://localhost:8080/api/interview-prep/generate/${candidateId}`, {
+        const response = await fetch(`${API_BASE}/api/interview-prep/generate/${candidateId}`, {
             method: 'POST'
         });
         const prep = await response.json();
@@ -195,16 +186,8 @@ async function generateInterviewPrep() {
     }
 }
 
-
-window.onload = function() {
-    loadAllJobs();
-    loadJobsForScoring();
-    loadCandidatesForPrep();
-};
-
-
 async function loadOutreachJobs() {
-    const response = await fetch('http://localhost:8080/api/job-descriptions');
+    const response = await fetch(`${API_BASE}/api/job-descriptions`);
     const jobs = await response.json();
     const select = document.getElementById('outreachJobSelect');
     select.innerHTML = jobs.map(job => `<option value="${job.id}">${job.title}</option>`).join('');
@@ -218,7 +201,7 @@ async function loadShortlisted() {
     resultsDiv.innerHTML = "Loading...";
 
     try {
-        const response = await fetch(`http://localhost:8080/api/outreach/shortlisted/${jobId}?threshold=${threshold}`);
+        const response = await fetch(`${API_BASE}/api/outreach/shortlisted/${jobId}?threshold=${threshold}`);
         const candidates = await response.json();
 
         if (candidates.length === 0) {
@@ -230,7 +213,7 @@ async function loadShortlisted() {
             <div class="outreach-card" id="outreach-${c.id}">
                 <h3>${c.candidate.name} — Score: ${c.score}/100</h3>
                 <p>${c.explanation}</p>
-                ${c.contacted 
+                ${c.contacted
                     ? `<span class="badge-contacted">✓ Contacted on ${new Date(c.contactedAt).toLocaleDateString()}</span>`
                     : `<button onclick="sendOutreach(${c.id})">Send Outreach Email</button>`
                 }
@@ -250,7 +233,7 @@ async function sendOutreach(scoreId) {
     button.innerText = "Sending...";
 
     try {
-        const response = await fetch(`http://localhost:8080/api/outreach/send/${scoreId}`, {
+        const response = await fetch(`${API_BASE}/api/outreach/send/${scoreId}`, {
             method: 'POST'
         });
 
@@ -270,9 +253,10 @@ async function sendOutreach(scoreId) {
 }
 
 
+
 window.onload = function() {
     loadAllJobs();
     loadJobsForScoring();
     loadCandidatesForPrep();
-    loadOutreachJobs(); 
+    loadOutreachJobs();
 };

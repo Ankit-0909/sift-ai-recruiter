@@ -109,6 +109,12 @@ async function loadJobsForScoring() {
     const select = document.getElementById('jobSelect');
     select.innerHTML = jobs.map(job => `<option value="${job.id}">${job.title}</option>`).join('');
 }
+async function loadJobsForPrep() {
+    const response = await fetch(`${API_BASE}/api/job-descriptions`);
+    const jobs = await response.json();
+    const select = document.getElementById('prepJobSelect');
+    select.innerHTML = jobs.map(job => `<option value="${job.id}">${job.title}</option>`).join('');
+}
 
 async function scoreAllCandidates() {
     const jobId = document.getElementById('jobSelect').value;
@@ -162,11 +168,12 @@ async function loadCandidatesForPrep() {
 
 async function generateInterviewPrep() {
     const candidateId = document.getElementById('candidateSelect').value;
+    const jobId = document.getElementById('prepJobSelect').value;
     const resultDiv = document.getElementById('prepResult');
     resultDiv.innerHTML = "Generating prep... please wait";
 
     try {
-        const response = await fetch(`${API_BASE}/api/interview-prep/generate/${candidateId}`, {
+        const response = await fetch(`${API_BASE}/api/interview-prep/generate/${candidateId}?jobId=${jobId}`, {
             method: 'POST'
         });
         const prep = await response.json();
@@ -259,4 +266,5 @@ window.onload = function() {
     loadJobsForScoring();
     loadCandidatesForPrep();
     loadOutreachJobs();
+     loadJobsForPrep();
 };

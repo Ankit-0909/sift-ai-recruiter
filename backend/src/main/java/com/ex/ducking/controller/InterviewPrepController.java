@@ -21,8 +21,8 @@ public class InterviewPrepController {
     private InterviewPrepRepository prepRepository;
 
     @PostMapping("/generate/{candidateId}")
-    public InterviewPrep generatePrep(@PathVariable Long candidateId) {
-        return prepService.generatePrep(candidateId);
+    public InterviewPrep generatePrep(@PathVariable Long candidateId, @RequestParam Long jobId) {
+        return prepService.generatePrep(candidateId,jobId);
     }
 
 

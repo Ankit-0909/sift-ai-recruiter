@@ -26,7 +26,7 @@ Sift's answer: narrow the candidate pool cheaply with semantic retrieval first, 
 |---|---|
 | **Job description generator** | Turns a one-line role idea into a structured job post, plus a distilled key-skills list used later for retrieval. |
 | **RAG-filtered candidate scoring** | Embeds every candidate profile locally, retrieves the subset most semantically similar to the role, and only sends *those* candidates to the LLM for a 0–100 score with a written explanation. |
-| **Interview prep briefing** | Per-candidate strengths, gaps to probe, and three tailored interview questions, generated on demand. |
+| **Interview prep briefing** | Job-aware strengths, gaps to probe, and three tailored interview questions — generated per candidate *and* per role, not just from the candidate's profile in isolation. |
 | **Shortlist outreach (human-in-the-loop)** | Candidates scoring above a threshold are surfaced for a recruiter to review. On approval, an AI-drafted outreach email is sent through a sandboxed mail service — nothing sends automatically without a click. |
 
 ---
@@ -49,7 +49,8 @@ Sift's answer: narrow the candidate pool cheaply with semantic retrieval first, 
      AND a plain-language explanation of what matched and what didn't
 
 5. Brief the interviewer
-   → Pick a scored candidate, get strengths, gaps, and targeted questions
+   → Pick a scored candidate and the job they're being considered for; 
+     get strengths, gaps, and targeted questions tailored to that specific role
 
 6. Shortlist & outreach            [human approves]
    → High scorers surface in a shortlist; a recruiter reviews and

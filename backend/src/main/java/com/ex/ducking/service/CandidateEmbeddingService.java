@@ -49,6 +49,22 @@ public class CandidateEmbeddingService {
         return "Embedded " + candidates.size() + " candidates.";
     }
 
+    public String embedSingleCandidate(Candidate c) {
+        if (embeddingModel == null) {
+            return "Embedding skipped — not available in this environment.";
+        }
+
+        String text = "Primary Skills: " + c.getSkills() + ". " +
+                "Role: " + c.getName() + " has " + c.getExperienceYears() + " years experience in " + c.getSkills() + ". " +
+                c.getResumeSummary();
+
+        TextSegment segment = TextSegment.from(text, Metadata.from("candidateId", String.valueOf(c.getId())));
+        Embedding embedding = embeddingModel.embed(segment).content();
+        embeddingStore.add(embedding, segment);
+
+        return "Embedded candidate " + c.getId();
+    }
+
     public List<Long> findTopMatchingCandidateIds(String jobDescriptionText, int topN, double minScore) {
         if (embeddingModel == null) {
             return Collections.emptyList(); // fallback trigger karega scoring mein

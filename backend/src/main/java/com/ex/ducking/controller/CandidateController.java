@@ -3,12 +3,14 @@ package com.ex.ducking.controller;
 
 import com.ex.ducking.model.Candidate;
 import com.ex.ducking.repository.CandidateRepository;
+import com.ex.ducking.service.DataSeederService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -17,6 +19,9 @@ public class CandidateController {
 
     @Autowired
     private CandidateRepository candidateRepository;
+
+    @Autowired
+    private DataSeederService dataSeederService;
 
     @PostMapping
     public Candidate createCandidate(@Valid @RequestBody Candidate candidate) {
@@ -42,5 +47,16 @@ public class CandidateController {
         }
         candidateRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/add-from-text")
+    public Candidate addFromText(@RequestBody Map<String, Object> body) {
+        String name = (String) body.get("name");
+        String email = (String) body.get("email");
+        Integer experienceYears = (Integer) body.get("experienceYears");
+        String description = (String) body.get("description");
+
+        return dataSeederService.addCandidateFromText(name, email, experienceYears, description);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DataSeederService {
@@ -37,6 +38,38 @@ public class DataSeederService {
             return "Seeded " + candidates.size() + " candidates successfully.";
         } catch (Exception e) {
             return "Error parsing candidates: " + e.getMessage() + " | Raw response: " + response;
+        }
+    }
+    @Autowired
+    private CandidateEmbeddingService embeddingService;
+
+    public Candidate addCandidateFromText(String name, String email, Integer experienceYears, String rawText) {
+        String prompt = "Extract skills and write a short professional resume summary based on this candidate description. " +
+                "Return ONLY a JSON object with exactly these fields: " +
+                "{\"skills\": \"<comma-separated list of skills, e.g. Java, Spring Boot, MySQL>\", " +
+                "\"resumeSummary\": \"<2-3 sentence professional summary>\"}. " +
+                "No markdown, no extra text.\n\n" +
+                "Candidate description: " + rawText;
+
+        String response = llmService.generateText(prompt);
+        String cleaned = response.replaceAll("```json", "").replaceAll("```", "").trim();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> result = mapper.readValue(cleaned, Map.class);
+
+            Candidate candidate = new Candidate();
+            candidate.setName(name);
+            candidate.setEmail(email);
+            candidate.setExperienceYears(experienceYears);
+            candidate.setSkills(result.get("skills"));
+            candidate.setResumeSummary(result.get("resumeSummary"));
+
+            Candidate saved = candidateRepository.save(candidate);
+            embeddingService.embedSingleCandidate(saved);
+            return saved;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse AI response for candidate: " + response, e);
         }
     }
 }

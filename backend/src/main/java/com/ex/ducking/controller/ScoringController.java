@@ -2,6 +2,7 @@ package com.ex.ducking.controller;
 
 
 import com.ex.ducking.model.CandidateScore;
+import com.ex.ducking.model.ScoringCriteria;
 import com.ex.ducking.repository.CandidateRepository;
 import com.ex.ducking.repository.CandidateScoreRepository;
 import com.ex.ducking.service.ScoringService;
@@ -28,7 +29,7 @@ public class ScoringController {
 
     @PostMapping("/score")
     public CandidateScore scoreOne(@RequestParam Long jobId, @RequestParam Long candidateId) {
-        return scoringService.scoreCandidate(jobId, candidateId);
+        return scoringService.scoreCandidate(jobId, candidateId,null);
     }
 
 
@@ -49,5 +50,18 @@ public class ScoringController {
     @GetMapping("/job/{jobId}")
     public List<CandidateScore> getScoresForJob(@PathVariable Long jobId) {
         return scoreRepository.findByJobDescriptionIdOrderByScoreDesc(jobId);
+    }
+
+    @PostMapping("/score-all-custom/{jobId}")
+    public Map<String, Object> scoreAllWithCriteria(@PathVariable Long jobId, @RequestBody ScoringCriteria criteria) {
+        List<CandidateScore> scores = scoringService.scoreAllCandidatesWithCriteria(jobId, criteria);
+        long totalCandidates = candidateRepository.count();
+
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("scores", scores);
+        response.put("totalCandidatesInPool", totalCandidates);
+        response.put("candidatesScored", scores.size());
+
+        return response;
     }
 }

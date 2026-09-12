@@ -27,5 +27,13 @@ public class JobDescription {
     @Column(columnDefinition = "TEXT")
     private String keySkills;
 
+    @Column(columnDefinition = "TEXT")
+    private String mandatorySkills;
+
+    @Column(columnDefinition = "TEXT")
+    private String preferredSkills;
+
+    private Integer minExperience;
+
     private String createdAt = java.time.LocalDateTime.now().toString();
 }

@@ -26,6 +26,8 @@ Sift's answer: narrow the candidate pool cheaply with semantic retrieval first, 
 |---|---|
 | **Job description generator** | Turns a one-line role idea into a structured job post, plus a distilled key-skills list used later for retrieval. |
 | **RAG-filtered candidate scoring** | Embeds every candidate profile locally, retrieves the subset most semantically similar to the role, and only sends *those* candidates to the LLM for a 0–100 score with a written explanation. |
+| **Candidate pool management** | Browse all candidates with their skills, experience, and summary; add new candidates via free-text description — an LLM extracts structured skills and a resume summary automatically. |
+| **Flexible, criteria-based scoring** | Beyond automatic RAG-filtered scoring, a recruiter can define mandatory skills, preferred skills, minimum experience, and free-text guidance for a single scoring run — letting the AI use judgment (e.g., accepting a PHP developer for a Java role) instead of rigid keyword matching. |
 | **Interview prep briefing** | Job-aware strengths, gaps to probe, and three tailored interview questions — generated per candidate *and* per role, not just from the candidate's profile in isolation. |
 | **Shortlist outreach (human-in-the-loop)** | Candidates scoring above a threshold are surfaced for a recruiter to review. On approval, an AI-drafted outreach email is sent through a sandboxed mail service — nothing sends automatically without a click. |
 
@@ -47,12 +49,22 @@ Sift's answer: narrow the candidate pool cheaply with semantic retrieval first, 
 4. Score with reasons
    → Only retrieved candidates reach the LLM — each gets a score
      AND a plain-language explanation of what matched and what didn't
+     
+5. Or score with custom judgment           [optional]
+   → A recruiter can bypass automatic retrieval entirely and score the
+     full candidate pool against session-specific criteria — mandatory
+     skills, preferred skills, minimum experience, and free-text guidance
+     for edge cases the AI should weigh flexibly (e.g., "accept PHP
+     experience in place of Java if the candidate's overall experience
+     is strong"). This path always scores everyone, since a rigid
+     similarity filter could exclude exactly the candidates the
+     recruiter's guidance is meant to include.     
 
-5. Brief the interviewer
+6. Brief the interviewer
    → Pick a scored candidate and the job they're being considered for; 
      get strengths, gaps, and targeted questions tailored to that specific role
 
-6. Shortlist & outreach            [human approves]
+7. Shortlist & outreach            [human approves]
    → High scorers surface in a shortlist; a recruiter reviews and
      manually triggers a drafted outreach email
 ```
@@ -169,6 +181,8 @@ A few choices made deliberately, with the trade-off understood rather than accid
 
 - **In-memory vector store instead of a dedicated vector DB.** At 10 candidates, re-embedding on startup costs a few seconds and adds zero infrastructure. At real scale, this would move to `pgvector` or a standalone store like Qdrant so embeddings persist and don't need recomputing.
 - **Retrieval uses a distilled `keySkills` field, not the full job description.** Embedding the entire generated JD diluted the signal — generic phrases like "collaborate with stakeholders" show up in every posting regardless of role, so a separate, skills-only field is generated alongside the JD specifically for retrieval.
+- **Custom-criteria scoring intentionally skips RAG retrieval.** When a recruiter provides flexible, judgment-based guidance, a semantic-similarity filter could exclude exactly the candidates that guidance is meant to include (e.g., a PHP developer being considered for a Java role). So this path always scores the full candidate pool directly — behavior stays identical in both local and production environments, regardless of whether the embedding model is available.
+- **Manually added candidates are embedded individually, not by re-embedding the whole pool.** Re-running the full seeding embedding step for every new candidate would be wasteful; a single-candidate embed keeps additions fast and leaves existing embeddings untouched.
 - **Scoring is upsert, not append.** Re-running "Score all candidates" updates existing score records for a given job–candidate pair instead of creating duplicates, so re-scoring is idempotent.
 - **Outreach requires a manual click.** The system drafts everything — the shortlist, the email copy — but a human decides whether it actually goes out. No candidate is contacted without a person approving it.
 - **Synthetic data over real sourcing.** Real candidate sourcing depends on licensed data providers (People Data Labs, ZoomInfo, etc.) — expensive and out of scope for a portfolio piece. The engineering focus here is the retrieval and scoring logic, not data acquisition.

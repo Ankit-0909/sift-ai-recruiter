@@ -1,271 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sift — Demo Screenshots</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sift — Demo Screenshots</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-     --bg:#d6dee6;
-     --surface:#FFFFFF;
-     --surface-2:#F1F5F9;
-     --border:#E2E8F0;
-     --text:#0F172A;
-     --text-muted:#64748B;
-     --accent:#1E40AF;
-     --accent-ink:#FFFFFF;
-     --accent-2:#3B82F6;
-     --accent-2-dim:rgba(59,130,246,0.10);
-     --radius:14px;
-     --maxw:1100px;
-   }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+        --bg:#d6dee6;
+        --surface:#FFFFFF;
+        --surface-2:#F1F5F9;
+        --border:#E2E8F0;
+        --text:#0F172A;
+        --text-muted:#64748B;
+        --accent:#1E40AF;
+        --accent-ink:#FFFFFF;
+        --accent-2:#3B82F6;
+        --accent-2-dim:rgba(59,130,246,0.10);
+        --radius:14px;
+        --maxw:1100px;
+      }
+      *{box-sizing:border-box;}
+      html{scroll-behavior:smooth;}
+      body{
+        margin:0; background:var(--bg); color:var(--text);
+        font-family:'IBM Plex Sans', sans-serif; line-height:1.6;
+        -webkit-font-smoothing:antialiased;
+      }
+      h1,h2,h3{
+        font-family:'Space Grotesk', sans-serif; line-height:1.15;
+        margin:0; letter-spacing:-0.01em;
+      }
+      a{color:inherit;}
+      ::selection{background:var(--accent-2-dim); color:var(--text);}
+      :focus-visible{outline:2px solid var(--accent-2); outline-offset:3px; border-radius:4px;}
+      .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
 
+    header{
+        position:sticky;
+        top:0;
+        z-index:50;
+        background:rgba(255,255,255,0.95);
+        backdrop-filter:blur(10px);
+        border-bottom:1px solid var(--border);
+      }
+      .nav{
+        max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+        display:flex; align-items:center; justify-content:space-between;
+      }
+      .brand{
+        display:flex; align-items:center; gap:10px;
+        font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:20px;
+      }
+      .brand svg{display:block;}
+      .back-link{
+        display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+        font-size:14px; font-weight:600; color:var(--text);
+        padding:9px 16px; border-radius:999px; border:1px solid var(--border);
+        transition:border-color .15s ease;
+      }
+      .back-link:hover{border-color:var(--accent-2);}
 
-   *{box-sizing:border-box;}
-   html{scroll-behavior:smooth;}
+      .hero{padding:64px 0 40px; text-align:center;}
+      .eyebrow{
+        font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+        letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-2);
+        display:inline-flex; align-items:center; gap:10px; margin-bottom:18px;
+      }
+      .eyebrow::before, .eyebrow::after{
+        content:""; width:22px; height:1px; background:var(--accent-2); display:inline-block;
+      }
+      .hero h1{font-size:clamp(28px, 4.4vw, 42px); font-weight:700; max-width:640px; margin:0 auto;}
+      .hero p{margin:16px auto 0; max-width:560px; color:var(--text-muted); font-size:16px;}
 
-   body{
-     margin:0;
-     background:var(--bg);
-     color:var(--text);
-     font-family:'IBM Plex Sans', sans-serif;
-     line-height:1.6;
-     -webkit-font-smoothing:antialiased;
-   }
+      .stage-label{margin:56px 0 20px; display:flex; align-items:center; gap:12px;}
+      .stage-label .num{
+        font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent-ink);
+        background:var(--accent); width:26px; height:26px; border-radius:50%;
+        display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      }
+      .stage-label h2{font-size:20px; font-weight:700;}
 
-   h1,h2,h3{
-     font-family:'Space Grotesk', sans-serif;
-     line-height:1.15;
-     margin:0;
-     letter-spacing:-0.01em;
-   }
+      .gallery{padding:20px 0 90px;}
+      .grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:26px;}
+      .shot-card{
+        background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+        overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; cursor:zoom-in;
+      }
+      .shot-card:hover{transform:translateY(-3px); box-shadow:0 18px 34px -18px rgba(43,32,56,0.35);}
+      .shot-card .frame{
+        background:var(--surface-2); border-bottom:1px solid var(--border);
+        display:flex; align-items:center; justify-content:center; overflow:hidden;
+      }
+      .shot-card img{width:100%; display:block;}
+      .shot-meta{padding:16px 18px 18px;}
+      .shot-tag{
+        font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.08em;
+        text-transform:uppercase; color:var(--accent-2);
+      }
+      .shot-meta h3{font-size:16px; font-weight:600; margin-top:6px;}
+      .shot-meta p{margin:6px 0 0; font-size:13.5px; color:var(--text-muted);}
+      .full-width{grid-column:1 / -1;}
+      @media (max-width:760px){.grid{grid-template-columns:1fr;}}
 
-   a{color:inherit;}
-   ::selection{background:var(--accent-2-dim); color:var(--text);}
+      .lightbox{
+        position:fixed; inset:0; background:rgba(43,32,56,0.82); display:none;
+        align-items:center; justify-content:center; z-index:100; padding:40px 20px;
+      }
+      .lightbox.is-open{display:flex;}
+      .lightbox img{max-width:100%; max-height:88vh; border-radius:10px; box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);}
+      .lightbox-close{
+        position:absolute; top:24px; right:28px; background:var(--surface);
+        border:1px solid var(--border); color:var(--text); width:40px; height:40px;
+        border-radius:50%; font-size:18px; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+      }
 
-   :focus-visible{
-     outline:2px solid var(--accent-2);
-     outline-offset:3px;
-     border-radius:4px;
-   }
-
-   .wrap{
-     max-width:var(--maxw);
-     margin:0 auto;
-     padding:0 28px;
-   }
-
-
-   header{
-     position:sticky;
-     top:0;
-     z-index:50;
-     background:rgba(255,255,255,0.95);
-     backdrop-filter:blur(10px);
-     border-bottom:1px solid var(--border);
-   }
-   .nav{
-     max-width:var(--maxw);
-     margin:0 auto;
-     padding:16px 28px;
-     display:flex;
-     align-items:center;
-     justify-content:space-between;
-   }
-   .brand{
-     display:flex;
-     align-items:center;
-     gap:10px;
-     font-family:'Space Grotesk', sans-serif;
-     font-weight:700;
-     font-size:20px;
-   }
-   .brand svg{display:block;}
-   .back-link{
-     display:inline-flex;
-     align-items:center;
-     gap:6px;
-     text-decoration:none;
-     font-size:14px;
-     font-weight:600;
-     color:var(--text);
-     padding:9px 16px;
-     border-radius:999px;
-     border:1px solid var(--border);
-     transition:border-color .15s ease;
-   }
-   .back-link:hover{border-color:var(--accent-2);}
-
-
-   .hero{
-     padding:64px 0 40px;
-     text-align:center;
-   }
-   .eyebrow{
-     font-family:'IBM Plex Mono', monospace;
-     font-size:12.5px;
-     letter-spacing:0.14em;
-     text-transform:uppercase;
-     color:var(--accent-2);
-     display:inline-flex;
-     align-items:center;
-     gap:10px;
-     margin-bottom:18px;
-   }
-   .eyebrow::before, .eyebrow::after{
-     content:"";
-     width:22px;
-     height:1px;
-     background:var(--accent-2);
-     display:inline-block;
-   }
-   .hero h1{
-     font-size:clamp(28px, 4.4vw, 42px);
-     font-weight:700;
-     max-width:640px;
-     margin:0 auto;
-   }
-   .hero p{
-     margin:16px auto 0;
-     max-width:520px;
-     color:var(--text-muted);
-     font-size:16px;
-   }
-
-
-   .gallery{
-     padding:20px 0 90px;
-   }
-   .grid{
-     display:grid;
-     grid-template-columns:repeat(2, 1fr);
-     gap:26px;
-   }
-   .shot-card{
-     background:var(--surface);
-     border:1px solid var(--border);
-     border-radius:var(--radius);
-     overflow:hidden;
-     transition:transform .18s ease, box-shadow .18s ease;
-     cursor:zoom-in;
-   }
-   .shot-card:hover{
-     transform:translateY(-3px);
-     box-shadow:0 18px 34px -18px rgba(43,32,56,0.35);
-   }
-   .shot-card .frame{
-     background:var(--surface-2);
-     border-bottom:1px solid var(--border);
-     display:flex;
-     align-items:center;
-     justify-content:center;
-     overflow:hidden;
-   }
-   .shot-card img{
-     width:100%;
-     display:block;
-   }
-   .shot-meta{
-     padding:16px 18px 18px;
-   }
-   .shot-tag{
-     font-family:'IBM Plex Mono', monospace;
-     font-size:10.5px;
-     letter-spacing:0.08em;
-     text-transform:uppercase;
-     color:var(--accent-2);
-   }
-   .shot-meta h3{
-     font-size:16px;
-     font-weight:600;
-     margin-top:6px;
-   }
-   .shot-meta p{
-     margin:6px 0 0;
-     font-size:13.5px;
-     color:var(--text-muted);
-   }
-   .full-width{
-     grid-column:1 / -1;
-   }
-   @media (max-width:760px){
-     .grid{grid-template-columns:1fr;}
-   }
-
-
-   .lightbox{
-     position:fixed;
-     inset:0;
-     background:rgba(43,32,56,0.82);
-     display:none;
-     align-items:center;
-     justify-content:center;
-     z-index:100;
-     padding:40px 20px;
-   }
-   .lightbox.is-open{display:flex;}
-   .lightbox img{
-     max-width:100%;
-     max-height:88vh;
-     border-radius:10px;
-     box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
-   }
-   .lightbox-close{
-     position:absolute;
-     top:24px;
-     right:28px;
-     background:var(--surface);
-     border:1px solid var(--border);
-     color:var(--text);
-     width:40px;
-     height:40px;
-     border-radius:50%;
-     font-size:18px;
-     cursor:pointer;
-     display:flex;
-     align-items:center;
-     justify-content:center;
-   }
-
-
-   footer{
-     padding:50px 0 60px;
-     text-align:center;
-     border-top:1px solid var(--border);
-   }
-   footer p{
-     color:var(--text-muted);
-     font-size:13.5px;
-     font-family:'IBM Plex Mono', monospace;
-   }
-   .foot-links{
-     margin-top:18px;
-     display:flex;
-     gap:14px;
-     justify-content:center;
-     flex-wrap:wrap;
-   }
-   .btn{
-     display:inline-flex;
-     align-items:center;
-     gap:8px;
-     padding:11px 20px;
-     border-radius:999px;
-     font-weight:600;
-     font-size:14.5px;
-     text-decoration:none;
-     border:1px solid transparent;
-     transition:transform .15s ease, opacity .15s ease, border-color .15s ease;
-   }
-   .btn:hover{transform:translateY(-1px);}
-   .btn-primary{background:var(--accent); color:var(--accent-ink);}
-   .btn-ghost{background:transparent; color:var(--text); border-color:var(--border);}
-   .btn-ghost:hover{border-color:var(--accent-2);}
-</style>
+      footer{padding:50px 0 60px; text-align:center; border-top:1px solid var(--border);}
+      footer p{color:var(--text-muted); font-size:13.5px; font-family:'IBM Plex Mono', monospace;}
+      .foot-links{margin-top:18px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+      .btn{
+        display:inline-flex; align-items:center; gap:8px; padding:11px 20px;
+        border-radius:999px; font-weight:600; font-size:14.5px; text-decoration:none;
+        border:1px solid transparent; transition:transform .15s ease, opacity .15s ease, border-color .15s ease;
+      }
+      .btn:hover{transform:translateY(-1px);}
+      .btn-primary{background:var(--accent); color:var(--accent-ink);}
+      .btn-ghost{background:transparent; color:var(--text); border-color:var(--border);}
+      .btn-ghost:hover{border-color:var(--accent-2);}
+  </style>
 </head>
 <body>
 
@@ -284,12 +150,13 @@
 <section class="hero wrap">
   <div class="eyebrow">Visual walkthrough</div>
   <h1>What the pipeline looks like in practice</h1>
-  <p>Seven screenshots covering the full flow — from generating a role to a recruiter approving outreach. Click any image to view it full size.</p>
+  <p>From generating a role to a recruiter applying flexible, custom judgment during scoring — every step below is a real screen from the working app, not a mockup.</p>
 </section>
 
 <section class="gallery wrap">
-  <div class="grid">
 
+  <div class="stage-label"><span class="num">1</span><h2>Define the role</h2></div>
+  <div class="grid">
     <div class="shot-card full-width" onclick="openLightbox('screenshots/landing-page.png')">
       <div class="frame"><img src="screenshots/landing-page.png" alt="Sift landing page"></div>
       <div class="shot-meta">
@@ -298,62 +165,100 @@
         <p>The project overview — problem statement, the pipeline visual, tech stack, and what's real vs. simulated.</p>
       </div>
     </div>
-
-    <div class="shot-card" onclick="openLightbox('screenshots/job-generator.png')">
-      <div class="frame"><img src="screenshots/job-generator.png" alt="Job description generator"></div>
+    <div class="shot-card" onclick="openLightbox('screenshots/job-generator1.png')">
+      <div class="frame"><img src="screenshots/job-generator1.png" alt="Job description generator"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 1</div>
+        <div class="shot-tag">Generate</div>
         <h3>Job description generator</h3>
         <p>A rough role idea turned into a structured job post, plus a distilled key-skills list used later for retrieval.</p>
       </div>
     </div>
-
-    <div class="shot-card" onclick="openLightbox('screenshots/job-saved.png')">
-      <div class="frame"><img src="screenshots/job-saved.png" alt="Saved job descriptions"></div>
+    <div class="shot-card" onclick="openLightbox('screenshots/job-saved1.png')">
+      <div class="frame"><img src="screenshots/job-saved1.png" alt="Saved job descriptions"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 1</div>
+        <div class="shot-tag">Persist</div>
         <h3>Saved job descriptions</h3>
-        <p>Generated roles persist to MySQL and are listed for reuse across scoring and outreach.</p>
+        <p>Generated roles persist to MySQL, along with optional mandatory skills, preferred skills, and minimum experience defaults.</p>
       </div>
     </div>
+  </div>
 
-    <div class="shot-card" onclick="openLightbox('screenshots/scoring-progress.png')">
-      <div class="frame"><img src="screenshots/scoring-progress.png" alt="Scoring in progress"></div>
+  <div class="stage-label"><span class="num">2</span><h2>Build the candidate pool</h2></div>
+  <div class="grid">
+    <div class="shot-card" onclick="openLightbox('screenshots/add-candidate.png')">
+      <div class="frame"><img src="screenshots/add-candidate.png" alt="Add candidate form"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 3–4</div>
-        <h3>Retrieval + scoring in progress</h3>
-        <p>RAG narrows the candidate pool before each retrieved profile is sent to the LLM for an explainable score.</p>
+        <div class="shot-tag">Add</div>
+        <h3>Add a candidate from free text</h3>
+        <p>Type a short background description — an LLM extracts structured skills and writes a professional resume summary automatically.</p>
       </div>
     </div>
-
-    <div class="shot-card" onclick="openLightbox('screenshots/backend-scoring.png')">
-      <div class="frame"><img src="screenshots/backend-scoring.png" alt="Backend role scoring results"></div>
+    <div class="shot-card" onclick="openLightbox('screenshots/candidate-pool.png')">
+      <div class="frame"><img src="screenshots/candidate-pool.png" alt="Candidate pool with skill chips"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 4</div>
-        <h3>Scored results — Backend role</h3>
-        <p>Each retrieved candidate gets a 0–100 score with a written explanation of what matched and what's missing.</p>
+        <div class="shot-tag">Browse</div>
+        <h3>Candidate pool</h3>
+        <p>Every candidate's skills, experience, and summary, browsable at a glance — including anyone added manually.</p>
       </div>
     </div>
+  </div>
 
-    <div class="shot-card" onclick="openLightbox('screenshots/interview-prep.png')">
-      <div class="frame"><img src="screenshots/interview-prep.png" alt="Interview prep briefing"></div>
+  <div class="stage-label"><span class="num">3</span><h2>Score, two ways</h2></div>
+  <div class="grid">
+    <div class="shot-card" onclick="openLightbox('screenshots/scoring-all-candidates.png')">
+      <div class="frame"><img src="screenshots/scoring-all-candidates.png" alt="RAG-filtered scoring results"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 5</div>
-        <h3>Interview prep briefing</h3>
-        <p>Strengths, gaps to probe, and three tailored interview questions generated per candidate.</p>
+        <div class="shot-tag">RAG</div>
+        <h3>Automatic, retrieval-filtered scoring</h3>
+        <p>Semantic retrieval narrows the pool before scoring — every result ships with a written explanation, not just a number.</p>
       </div>
     </div>
-
-    <div class="shot-card" onclick="openLightbox('screenshots/outreach.png')">
-      <div class="frame"><img src="screenshots/outreach.png" alt="Shortlisted candidates and outreach"></div>
+    <div class="shot-card" onclick="openLightbox('screenshots/custom-criteria-panel.png')">
+      <div class="frame"><img src="screenshots/custom-criteria-panel.png" alt="Custom criteria panel"></div>
       <div class="shot-meta">
-        <div class="shot-tag">Step 6</div>
-        <h3>Shortlist & outreach</h3>
+        <div class="shot-tag">Custom</div>
+        <h3>Recruiter-defined criteria</h3>
+        <p>Set mandatory skills, preferred skills, minimum experience, and free-text guidance for how flexible the AI should be.</p>
+      </div>
+    </div>
+    <div class="shot-card full-width" onclick="openLightbox('screenshots/custom-criteria-result.png')">
+      <div class="frame"><img src="screenshots/custom-criteria-result.png" alt="Custom criteria scoring result"></div>
+      <div class="shot-meta">
+        <div class="shot-tag">Result</div>
+        <h3>Judgment-aware scoring in action</h3>
+        <p>This path intentionally skips retrieval and scores the full pool — so a candidate with adjacent, not exact, skills still gets fairly considered when the recruiter says it's okay.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-label"><span class="num">4</span><h2>Prep, review, and act</h2></div>
+  <div class="grid">
+    <div class="shot-card" onclick="openLightbox('screenshots/interview-prep1.png')">
+      <div class="frame"><img src="screenshots/interview-prep1.png" alt="Job-aware interview prep"></div>
+      <div class="shot-meta">
+        <div class="shot-tag">Prep</div>
+        <h3>Job-aware interview briefing</h3>
+        <p>Strengths, gaps to probe, and interview questions tailored to both the candidate and the specific role.</p>
+      </div>
+    </div>
+    <div class="shot-card" onclick="openLightbox('screenshots/previous-scoring.png')">
+      <div class="frame"><img src="screenshots/previous-scoring.png" alt="Previous candidate scoring"></div>
+      <div class="shot-meta">
+        <div class="shot-tag">History</div>
+        <h3>Previous scoring, on demand</h3>
+        <p>Pull up saved scores for any role instantly, without re-running the AI — a quick way to revisit a past decision.</p>
+      </div>
+    </div>
+    <div class="shot-card" onclick="openLightbox('screenshots/outreach1.png')">
+      <div class="frame"><img src="screenshots/outreach1.png" alt="Shortlisted candidates and outreach"></div>
+      <div class="shot-meta">
+        <div class="shot-tag">Outreach</div>
+        <h3>Shortlist &amp; human-approved outreach</h3>
         <p>High scorers surface for review; a recruiter manually approves before an AI-drafted email goes out.</p>
       </div>
     </div>
-
   </div>
+
 </section>
 
 <footer class="wrap">

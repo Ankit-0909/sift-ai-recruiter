@@ -1,45 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sift - Job Description Generator</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <base target="_blank">
 </head>
 <body>
+<div class="app-wrapper">
     <div class="container">
-        <h1>AI Job Description Generator</h1>
-        <textarea id="ideaInput" placeholder="Write a rough job idea, for example: 'Backend developer with Java experience"></textarea>
-        <button onclick="generateJobDescription()">Generate</button>
-        <div id="result"></div>
-        <button id="saveBtn" onclick="saveJobDescription()" style="display:none;">Save to Database</button>
-    <div id="saveStatus"></div>
-     <hr>
+        <header class="page-header">
+            <div class="brand-mark">
+                <span class="brand-icon">◈</span>
+            </div>
+            <h1>AI Job Description Generator</h1>
+            <p class="subtitle">Transform rough ideas into professional job descriptions, score candidates, and streamline your hiring workflow.</p>
+        </header>
 
-    <h2>Saved Job Descriptions</h2>
-    <button onclick="loadAllJobs()">Refresh List</button>
-    <div id="jobList"></div>
 
-    <hr>
-<h2>Score Candidates</h2>
-<select id="jobSelect"></select>
-<button onclick="scoreAllCandidates()">Score All Candidates for This Job</button>
-<div id="scoreResults"></div>
+        <section class="section-card primary-section">
+            <div class="section-header">
+                <span class="section-icon">✦</span>
+                <h2>Generate Description</h2>
+            </div>
+            <div class="input-group">
+                <label for="ideaInput">Job Idea</label>
+                <textarea id="ideaInput" placeholder="Write a rough job idea, for example: 'Backend developer with Java experience"></textarea>
+            </div>
+            <div class="action-row">
+                <button class="btn-primary" onclick="generateJobDescription()">Generate</button>
+            </div>
+            <div id="result" class="result-panel"></div>
+            <div class="input-group criteria-group">
+                <label class="label-with-badge">
+                    Scoring Criteria (Optional)
+                    <span class="ai-badge">Refines AI Scoring</span>
+                </label>
+                <div class="form-row">
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="mandatorySkillsInput">Mandatory Skills</label>
+                        <input type="text" id="mandatorySkillsInput" placeholder="e.g. Java, Spring Boot">
+                    </div>
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="preferredSkillsInput">Preferred Skills</label>
+                        <input type="text" id="preferredSkillsInput" placeholder="e.g. Docker, AWS">
+                    </div>
+                    <div class="input-wrapper" style="flex:1;">
+                        <label for="minExpInput">Min Years Exp.</label>
+                        <input type="number" id="minExpInput" placeholder="3">
+                    </div>
+                </div>
+            </div>
+            <div class="action-row secondary-actions">
+                <button id="saveBtn" class="btn-secondary" onclick="saveJobDescription()" style="display:none;">Save to Database</button>
+                <div id="saveStatus" class="status-message"></div>
+            </div>
+        </section>
 
-<hr>
-<h2>Interview Preparation</h2>
-        <select id="prepJobSelect"></select>
-<select id="candidateSelect"></select>
-<button onclick="generateInterviewPrep()">Generate Interview Prep</button>
-<div id="prepResult"></div>
 
-<hr>
-<h2>Shortlisted Candidates (Outreach)</h2>
-<select id="outreachJobSelect"></select>
-<input type="number" id="thresholdInput" value="70" min="0" max="100" style="width:80px;" placeholder="Min score">
-<button onclick="loadShortlisted()">Load Shortlisted Candidates</button>
-<div id="shortlistResults"></div>
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">☰</span>
+                <h2>Saved Job Descriptions</h2>
+                <button class="btn-ghost btn-small" onclick="loadAllJobs()">Refresh List</button>
+            </div>
+            <div id="jobList" class="content-list"></div>
+        </section>
 
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">✚</span>
+                <h2>Add Candidate</h2>
+            </div>
+            <div class="input-group">
+                <div class="form-row">
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="newCandName">Name</label>
+                        <input type="text" id="newCandName" placeholder="e.g. Priya Sharma">
+                    </div>
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="newCandEmail">Email</label>
+                        <input type="email" id="newCandEmail" placeholder="priya@email.com">
+                    </div>
+                    <div class="input-wrapper" style="flex:1;">
+                        <label for="newCandExp">Years Exp.</label>
+                        <input type="number" id="newCandExp" placeholder="3">
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="newCandDesc" class="label-with-badge">
+                    Candidate Background
+                    <span class="ai-badge">AI Skill Extraction</span>
+                </label>
+                <textarea id="newCandDesc" rows="4" placeholder="e.g. Priya has 3 years building backend systems with Java and Spring Boot, strong in MySQL and REST API design."></textarea>
+            </div>
+            <div class="action-row">
+                <button class="btn-primary" onclick="addCandidateManually()">Add Candidate</button>
+            </div>
+            <div id="addCandStatus" class="status-message"></div>
+        </section>
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">⬡</span>
+                <h2>Candidate Pool</h2>
+                <button class="btn-ghost btn-small" onclick="loadCandidateProfiles()">Refresh List</button>
+            </div>
+            <div id="candidateList" class="content-list"></div>
+        </section>
+
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">↺</span>
+                <h2>Previous Candidate Scoring</h2>
+            </div>
+            <div class="form-row">
+                <div class="select-wrapper">
+                    <select id="historyJobSelect"></select>
+                </div>
+                <button class="btn-primary" onclick="loadPreviousScores()">Show Previous Candidate Scoring</button>
+            </div>
+            <div id="historyResults" class="content-list"></div>
+        </section>
+
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">◈</span>
+                <h2>Score Candidates</h2>
+            </div>
+            <div class="form-row">
+                <div class="select-wrapper">
+                    <select id="jobSelect"></select>
+                </div>
+                <button class="btn-primary" onclick="scoreAllCandidates()">Score All Candidates</button>
+                <button class="btn-secondary" onclick="toggleCustomCriteriaPanel()">Score with Custom Criteria ⚙</button>
+            </div>
+
+
+            <div id="customCriteriaPanel" class="criteria-group" style="display:none;">
+                <label class="label-with-badge">
+                    Custom Scoring Criteria
+                    <span class="ai-badge">Session Only — Not Saved</span>
+                </label>
+                <div class="form-row">
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="customMandatorySkills">Mandatory Skills</label>
+                        <input type="text" id="customMandatorySkills" placeholder="e.g. Backend development">
+                    </div>
+                    <div class="input-wrapper" style="flex:2;">
+                        <label for="customPreferredSkills">Preferred Skills</label>
+                        <input type="text" id="customPreferredSkills" placeholder="e.g. Java, Spring Boot">
+                    </div>
+                    <div class="input-wrapper" style="flex:1;">
+                        <label for="customMinExp">Min Years Exp.</label>
+                        <input type="number" id="customMinExp" placeholder="3">
+                    </div>
+                </div>
+                <div class="input-group" style="margin-top:12px;">
+                    <label for="customRecruiterNotes">Recruiter Notes / Flexibility</label>
+                    <textarea id="customRecruiterNotes" rows="3" placeholder="e.g. Open to candidates with PHP or similar backend experience instead of Java specifically, if their overall experience is strong."></textarea>
+                </div>
+                <div class="action-row" style="margin-top:12px;">
+                    <button class="btn-primary" onclick="scoreWithCustomCriteria()">Score with these Criteria</button>
+                </div>
+            </div>
+
+            <div id="scoreResults" class="content-list"></div>
+        </section>
+
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">◉</span>
+                <h2>Interview Preparation</h2>
+            </div>
+            <div class="form-row">
+                <div class="select-wrapper">
+                    <select id="prepJobSelect"></select>
+                </div>
+                <div class="select-wrapper">
+                    <select id="candidateSelect"></select>
+                </div>
+                <button class="btn-primary" onclick="generateInterviewPrep()">Generate Prep</button>
+            </div>
+            <div id="prepResult" class="result-panel"></div>
+        </section>
+
+
+        <section class="section-card">
+            <div class="section-header">
+                <span class="section-icon">◆</span>
+                <h2>Shortlisted Candidates</h2>
+            </div>
+            <div class="form-row">
+                <div class="select-wrapper">
+                    <select id="outreachJobSelect"></select>
+                </div>
+                <div class="input-wrapper threshold-wrapper">
+                    <label for="thresholdInput">Min Score</label>
+                    <input type="number" id="thresholdInput" value="70" min="0" max="100" placeholder="Min score">
+                </div>
+                <button class="btn-primary" onclick="loadShortlisted()">Load Shortlisted</button>
+            </div>
+            <div id="shortlistResults" class="content-list"></div>
+        </section>
     </div>
-    <script src="script.js"></script>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
